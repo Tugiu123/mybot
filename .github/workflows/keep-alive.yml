@@ -1,0 +1,21 @@
+name: Scheduled OpenClaw Task
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # 每15分钟运行一次
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Ping codespace
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://special-meme-q744j5vj7xx5h9rpr.github.dev/
+
+      - name: Load OpenClaw environment and run health check
+        run: |
+          source ./openclaw.env
+          openclaw health
